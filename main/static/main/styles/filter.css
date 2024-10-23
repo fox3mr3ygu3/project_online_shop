@@ -1,0 +1,93 @@
+.filter-container {
+    position: sticky; /* Делает элемент "прилипшим" */
+    top: 0; /* Располагает его у верхней границы окна */
+    color: white;
+    padding: 20px; /* Увеличенные отступы для лучшего пространства */
+    margin-bottom: 20px;
+    background-color: #121212; /* Фон остается черным */
+    z-index: 1000; /* Увеличьте значение, если нужно, чтобы элемент был поверх других */
+}
+
+.filter-group {
+    margin-bottom: 15px;
+}
+
+.filter-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.filter-group + .filter-group {
+    margin: 0 20px; /* Ensures space specifically between the FPS and brand filter */
+}
+
+.filter-select, .price-inputs input {
+    width: 100%;
+    padding: 10px; /* Increased padding for better usability */
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    margin: 0 10px;
+    box-sizing: border-box; /* Ensures padding doesn't affect width */
+    cursor: pointer;
+}
+
+.price-inputs {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Space between inputs */
+
+}
+
+.price-wrapper {
+    display: flex;
+    align-items: center;
+    margin: 0 20px;
+    width: (50% + 100px); /* Adjust width to fit in flex layout */
+}
+
+.range-indicator {
+    font-size: 24px; /* Adjust font size for better visibility */
+    color: white;
+    margin: 0 10px; /* Spacing around arrows */
+    line-height: 1; /* Center vertically in flex layout */
+}
+
+.filter-button {
+    display: inline-block; /* Make it an inline block element */
+    padding: 10px 15px; /* Increase padding for better spacing */
+    border: none;
+    background-color: #04AA6D;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    margin: 0 10px;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+    width: 30%; /* Adjust as needed */
+    text-align: center;
+    font-size: 1.2em; /* Set a proportional font size */
+    line-height: 2.7; /* Use line-height for better vertical alignment */
+}
+
+.filter-button:hover {
+    background-color: #038e55;
+}
+
+.currency {
+    margin-left: 5px; /* Space between input and currency */
+    font-weight: bold; /* Emphasize currency */
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+    .price-inputs {
+        flex-direction: column; /* Stack inputs on small screens */
+    }
+    .price-wrapper {
+        width: 100%; /* Full width for small screens */
+        margin-bottom: 10px; /* Space between stacked elements */
+    }
+}

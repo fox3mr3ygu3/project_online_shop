@@ -1,0 +1,44 @@
+.search-container {
+    display: flex;
+    justify-content: center; /* Center the search container horizontally */
+    width: 70%; /* Set width to 70% of the viewport */
+    margin: 20px auto; /* Center the container with margin */
+}
+
+form {
+    display: flex; /* Use flexbox to align input and button */
+    width: 100%; /* Ensure the form takes full width of the container */
+}
+
+input[type="text"] {
+    flex: 1; /* Allow the input to grow and take available space */
+    padding: 12px; /* Increase padding for a larger input */
+    font-size: 16px; /* Set font size for better readability */
+    border: 2px solid rgba(61, 77, 3, 0.938); /* Border styling */
+    border-radius: 5px 0 0 5px; /* Rounded corners on the left */
+    outline: none; /* Remove default outline */
+    transition: border-color 0.3s; /* Smooth transition for border color */
+}
+
+input[type="text"]:focus {
+    border-color: rgba(0, 0, 0, 0.9); /* Change border color on focus */
+}
+
+button#search_button {
+    padding: 12px 20px; /* Add padding for better size */
+    background-color: rgba(61, 77, 3, 0.938); /* Background color */
+    color: #fff; /* Text color */
+    border: none; /* Remove border */
+    cursor: pointer; /* Pointer cursor */
+    border-radius: 0 5px 5px 0; /* Rounded corners on the right */
+    transition: background-color 0.3s, transform 0.2s; /* Transitions */
+}
+
+button#search_button:hover {
+    background-color: rgba(32, 231, 6, 0.9); /* Darker background on hover */
+    transform: scale(1.05); /* Slightly increase size on hover */
+}
+
+button#search_button:active {
+    transform: scale(0.95); /* Slightly decrease size when clicked */
+}

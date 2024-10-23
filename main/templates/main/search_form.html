@@ -1,0 +1,16 @@
+<div class="search-container">
+    <form id="search-form" action="{% url 'search' %}" method="GET">
+        <input type="text" name="q" id="search-input" placeholder="Search for products..." required>
+        <button id="search_button" type="submit">Search</button>
+    </form>
+</div>
+
+<script>
+document.getElementById('search-form').onsubmit = function() {
+    var query = document.getElementById('search-input').value;
+    if (query.length < 2) {
+        alert('Please enter at least 2 characters for a search.');
+        return false;  // Stop form submission
+    }
+};
+</script>

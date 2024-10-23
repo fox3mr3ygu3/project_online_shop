@@ -1,0 +1,132 @@
+body {
+    margin: 0;
+    padding-bottom: 60px;
+    background-color: #121212; /* Dark background */
+}
+
+.product-detail {
+    flex: 1;
+    margin: 20px auto;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+}
+
+#product-image {
+    background-color: black; /* Цвет фона контейнера */
+    margin: 20px auto; /* Центрируем по горизонтали */
+    max-width: 500px; /* Максимальная ширина */
+    width: auto; /* Автоматическая ширина */
+    height: auto; /* Автоматическая высота */
+    display: block; /* Блочный элемент для центрирования */
+    max-height: 400px; /* Устанавливаем максимальную высоту */
+
+}
+
+.navigation-buttons {
+    margin-top: 10px; /* Отступ сверху для кнопок */
+    text-align: center; /* Центрируем кнопки */
+}
+
+#prev-button, #next-button {
+    background-color: rgba(61, 77, 3, 0.938);
+    color: #fff;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s; /* Add transform for scaling effect */
+    border-radius: 5px; /* Rounded corners for a softer look */
+    font-size: 16px; /* Larger font size for better readability */
+}
+
+#prev-button:hover, #next-button:hover {
+    background-color: rgba(0, 0, 0, 0.9);
+    transform: scale(1.05); /* Slightly increase the size on hover */
+}
+
+#prev-button:active, #next-button:active {
+    transform: scale(0.95); /* Slightly decrease the size when clicked */
+}
+
+#prev-button {
+    margin-right: 10px; /* Margin to the right of the previous button */
+}
+
+#next-button {
+    margin-left: 10px; /* Margin to the left of the next button */
+}
+
+/* Optional: Add focus styles for accessibility */
+#prev-button:focus, #next-button:focus {
+    outline: 2px solid #fff; /* Add an outline on focus for better visibility */
+}
+#details {
+    margin-top: 20px;
+}
+
+#details h2 {
+    margin: 0 0 10px;
+    color: rgba(10, 186, 181, 0.8); /* Tiffany с 80% непрозрачностью */
+}
+
+#details p {
+    line-height: 1.6;
+    color: rgba(10, 186, 181, 0.8); /* Tiffany с 80% непрозрачностью */
+}
+
+#buy {
+    position: fixed; /* Фиксирует кнопку внизу экрана */
+    bottom: 0; /* Привязывает к нижней части экрана */
+    left: 0;
+    right: 0;
+    text-align: center; /* Центрирует кнопку */
+    background-color: black ; /* Фон для кнопки */
+    z-index: 10;
+    padding: 0; /* Отступы для кнопки */
+}   
+
+.buy-button {
+    background-color: #28a745;
+    color: white;
+    padding: 15px 25px;
+    text-decoration: none;
+    font-size: 24px;
+    width: 100%;
+    line-height: 1;
+    display: inline-block;
+    transition: background-color 0.3s, padding 0.1s; /* Добавлено плавное изменение для padding и font-size */    box-sizing: border-box;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); /* Более заметная тень */    cursor: pointer;
+}
+
+.buy-button:hover {
+    background-color: #218838;
+    padding: 18px 28px; /* Увеличение отступов при наведении */
+    font-size: 26px; /* Увеличение размера шрифта при наведении */
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2); /* Увеличение тени при наведении */
+}
+
+.buy-button:active {
+    background-color: #1e7e34; /* Темнее фон при нажатии */
+    padding: 10px, 20px;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2); /* Уменьшение тени при нажатии */
+}
+
+.indicator-container {
+    display: flex; /* Для расположения кружков в ряд */
+    justify-content: center; /* Центрируем кружки */
+    margin-top: 10px; /* Отступ сверху */
+}
+
+.indicator {
+    width: 12px; /* Ширина кружка */
+    height: 12px; /* Высота кружка */
+    border-radius: 50%; /* Кружок */
+    background-color: #ccc; /* Цвет неактивного кружка */
+    margin: 0 5px; /* Отступы между кружками */
+    transition: background-color 0.3s; /* Плавный переход цвета */
+}
+
+.indicator.active {
+    background-color: #28a745; /* Цвет активного кружка */
+}
+

@@ -1,0 +1,81 @@
+{% load static %}
+{% load humanize %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ product.title }}</title>
+    <link rel="stylesheet" href="{% static 'main/styles/search.css' %}">
+    <link rel="stylesheet" href="{% static 'main/styles/product_detail.css' %}">
+</head>
+<body>
+    <header>
+        {% include 'main/search_form.html' %}
+    </header>
+    <main>
+        <article>
+            <img id="product-image" src="{{ product.image.all.0.image.url }}" alt="{{ product.title }}">
+            <div class="navigation-buttons">
+                <button id="prev-button">&lt; </button>
+                <button id="next-button">&gt; </button>
+            </div>
+            <div class="indicator-container" id="indicator-container"></div>
+            <section id="details">
+                <h2>{{ product.title }}</h2>
+                <p>{{ product.safe_description }}</p>
+            </section>
+        </article>
+    </main>
+    <div id="buy">
+        <a href="payment" class="buy-button">{{ product.price.amount|floatformat:2|intcomma }} {{ product.price.currency }}</a>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+    const images = [
+        {% for image in product.image.all %}
+            '{{ image.image.url }}'{% if not forloop.last %}, {% endif %}
+        {% endfor %}
+    ];
+
+    let currentIndex = 0; // Индекс текущего изображения
+
+    // Функция для обновления отображаемого изображения и индикаторов
+    function updateImage() {
+        document.getElementById('product-image').src = images[currentIndex];
+        updateIndicators();
+    }
+
+    // Функция для обновления индикаторов
+    function updateIndicators() {
+        const indicatorContainer = document.getElementById('indicator-container');
+        indicatorContainer.innerHTML = ''; // Очищаем текущие индикаторы
+
+        images.forEach((_, index) => {
+            const indicator = document.createElement('div');
+            indicator.classList.add('indicator');
+            if (index === currentIndex) {
+                indicator.classList.add('active'); // Добавляем класс активному индикатору
+            }
+            indicatorContainer.appendChild(indicator);
+        });
+    }
+
+    // Обработчик события для кнопки "Next"
+    document.getElementById('next-button').addEventListener('click', function() {
+        currentIndex = (currentIndex + 1) % images.length; // Циклическая навигация
+        updateImage();
+    });
+
+    // Обработчик события для кнопки "Previous"
+    document.getElementById('prev-button').addEventListener('click', function() {
+        currentIndex = (currentIndex - 1 + images.length) % images.length; // Циклическая навигация
+        updateImage();
+    });
+
+    // Инициализируем с первым изображением и индикаторами
+    updateImage();
+});
+    </script>
+</body>
+</html>

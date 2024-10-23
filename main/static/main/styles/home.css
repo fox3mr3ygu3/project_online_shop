@@ -1,0 +1,39 @@
+body {
+  background-color: #121212; /* Dark background */
+}
+
+.btn:hover {
+  background-color: white;
+  border-color: red;
+}
+
+a{
+  color: red;
+  text-decoration: none;
+}
+
+footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: #2C3E50;
+  color: white;
+  text-align: center;
+  padding: 0.005rem;
+}
+
+.hero {
+    color: white;
+}
+
+.logo {
+    color: white;
+}
+
+.visitor-count {
+  color: #0ABAB5; /* Цвет Tiffany */
+  font-size: 18px; /* Размер шрифта */
+  margin: 10px 0; /* Отступы сверху и снизу */
+  text-align: left; /* Выравнивание текста влево */
+}

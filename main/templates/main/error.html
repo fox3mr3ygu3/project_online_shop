@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 Page Not Found</title>
+    <link rel="stylesheet" href="{% static 'styles.css' %}"> <!-- Optional: Include your CSS -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            text-align: center;
+            padding: 50px;
+        }
+        h1 {
+            font-size: 50px;
+            color: #e74c3c; /* Red color */
+        }
+        p {
+            font-size: 20px;
+        }
+        a {
+            text-decoration: none;
+            color: #3498db; /* Blue color */
+            font-weight: bold;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <h1>404 - Page Not Found</h1>
+    <p>Oops! The page you're looking for does not exist.</p>
+    <p>
+        You can go back to the
+        <a href="{% url 'home' %}">homepage</a>
+        or use the navigation above to find what you're looking for.
+    </p>
+</body>
+</html>

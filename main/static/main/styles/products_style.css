@@ -1,0 +1,94 @@
+body {
+    background-color: #121212; /* Dark background */
+}
+
+.products-container {
+    display: flex;
+    flex-wrap: wrap; /* Позволяет элементам переходить на новую строку */
+    justify-content: flex-start; /* Убираем пространство между элементами */
+    gap: 2px;
+    margin-bottom: 2rem;
+}
+
+.products {
+    display: flex;
+    flex-direction: column; /* Вертикальное расположение элементов */
+    border: 4px #121212; /* Light gray border */
+    border-radius: 16px; /* Rounded corners */
+    margin-bottom: 15px; /* Spacing between products */
+    padding: 10px; /* Inner padding */
+    background-color: #121212; /* Dark background */
+    box-shadow: 0 2px 15px rgba(255, 255, 255, 0.2); /* Lighter shadow for better visibility */
+    transition: transform 0.3s; /* Smooth transform on hover */
+    width: 200px;
+    height: 320px; /* Фиксированная высота контейнера */
+    overflow: hidden;
+}
+
+.products:hover {
+    transform: scale(1.02); /* Slightly enlarge on hover */
+    background-color: #05fcd7; /* Новый цвет фона при наведении */
+}
+
+.product-image {
+    position: relative; /* Позволяет позиционировать вложенные элементы */
+    display: flex;
+    align-items: center; /* Центрирование изображения */
+    justify-content: center; /* Центрирование изображения */
+    height: 200px; /* Фиксированная высота */
+    overflow: hidden; /* Скрыть края изображения */
+}
+
+.product-image img {
+    width: 100%; /* Занимает всю ширину контейнера */
+    height: 100%; /* Занимает всю высоту контейнера */
+    object-fit: cover; /* Заполняет контейнер без искажений */
+    border-radius: 16px; /* Закругленные углы */
+}
+
+.btn {
+    text-decoration: none;
+}
+
+.product-title {
+    color: #047531; /* Цвет текста заголовка */
+    margin: 10px 0; /* Вертикальные отступы */
+    flex-grow: 0; /* Не сжимается */
+    flex-shrink: 1; /* Позволяет сжиматься при необходимости */
+    transition: color 0.3s ease, text-shadow 0.3s ease; /* Плавный переход для цвета и тени */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7); /* Измененный цвет тени */
+    border-radius: 5px; /* Закругленные углы рамки */
+    padding: 5px; /* Внутренний отступ для заголовка */
+    background-color: #121212; /* Фон заголовка, чтобы рамка была заметна */
+    max-height: 60px; /* Ограничиваем максимальную высоту заголовка */
+    overflow: hidden; /* Скрываем текст, который не помещается */
+}
+
+.products:hover .product-title {
+    transform: scale(1.02); /* Slightly enlarge on hover */
+    color: #121212;
+    background-color: #05fcd7; /* Новый цвет фона при наведении */
+}
+
+.product-price-wrapper {
+    border: 2px solid #ccc; /* Light gray border */
+    border-radius: 5px; /* Rounded corners */
+    padding: 5px; /* Inner padding */
+    margin-top: auto; /* Отодвигает цену вниз */
+    background-color: #057205; /* Light background for contrast */
+    text-align: center; /* Center text */
+    flex-shrink: 0; /* Предотвращает сжатие цены */
+    transition: background-color 0.3s ease, transform 0.3s ease; /* Transition effect */
+}
+
+.product-price {
+    color: rgba(255, 255, 255, 0.8); /* Белый с 80% непрозрачностью */
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7); /* Тень текста */
+}
+
+.product-price-wrapper:hover {
+    background-color: black; /* Darker background on hover */
+    transform: scale(1.05); /* Slightly enlarge on hover */
+    cursor: pointer;
+}
+

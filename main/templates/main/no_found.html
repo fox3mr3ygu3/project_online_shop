@@ -1,0 +1,32 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'main/styles/search.css' %}">
+    <title>Page Not Found</title>
+    <style>
+        body {
+            background-color: #121212; /* Dark background */
+            color: #FF0000; /* Bright red text */
+        }
+
+        header {
+            margin-bottom: 20px; /* Space between search and message */
+        }
+
+        p {
+            font-size: 24px; /* Adjusted size for visibility */
+            margin: 0; /* Remove default margin */
+            text-align: center; /* Center the message */
+        }
+    </style>
+</head>
+<body>
+    <header>
+        {% include 'main/search_form.html' %}
+    </header>
+    <p>No products found.</p> <!-- More descriptive message -->
+</body>
+</html>

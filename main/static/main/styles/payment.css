@@ -1,0 +1,36 @@
+.modal {
+    display: none; /* Скрыто по умолчанию */
+    position: fixed; /* Остаться на месте */
+    z-index: 1; /* Сидит на верху */
+    left: 0;
+    top: 0;
+    width: 100%; /* Полная ширина */
+    height: 100%; /* Полная высота */
+    background-color: rgba(0, 0, 0, 0.4); /* Черный с прозрачностью */
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: auto; /* Центрирование */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 30%; /* Ширина модального окна, можно подкорректировать */
+    position: absolute; /* Для центрирования */
+    top: 50%; /* Сместить вниз */
+    left: 50%; /* Сместить вбок */
+    transform: translate(-50%, -50%); /* Центрирование по обеим осям */
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
