@@ -1,36 +1,163 @@
-.modal {
-    display: none; /* Скрыто по умолчанию */
-    position: fixed; /* Остаться на месте */
-    z-index: 1; /* Сидит на верху */
-    left: 0;
-    top: 0;
-    width: 100%; /* Полная ширина */
-    height: 100%; /* Полная высота */
-    background-color: rgba(0, 0, 0, 0.4); /* Черный с прозрачностью */
-}
-
-.modal-content {
-    background-color: #fefefe;
-    margin: auto; /* Центрирование */
+body {
+    background-color: #121212; /* Dark background */
+    display: flex;
+    justify-content: center;
+    margin: 0;
     padding: 20px;
-    border: 1px solid #888;
-    width: 30%; /* Ширина модального окна, можно подкорректировать */
-    position: absolute; /* Для центрирования */
-    top: 50%; /* Сместить вниз */
-    left: 50%; /* Сместить вбок */
-    transform: translate(-50%, -50%); /* Центрирование по обеим осям */
 }
 
-.close {
-    color: #aaa;
-    float: right;
-    font-size: 28px;
+.main-container {
+    width: 100%;
+    max-width: 800px; /* Restrict max width for better readability */
+    background-color: #1e1e1e; /* Slightly lighter background for contrast */
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+h1, h2, h3 {
+    color: #ffffff;
+}
+
+p {
+    color: #fff;
+}
+
+.admin-contact {
+    display: inline-flex; /* Keep it inline and flexible */
+    align-items: center; /* Vertically center-align items */
+    gap: 10px; /* Space between the text and the icon */
+    margin-bottom: 20px;
+}
+
+.admin-contact p {
+    color: #05fcd7; /* Eye-catching color */
+    font-weight: bold;
+    margin: 0; /* Remove margin for proper alignment */
+    display: flex; /* Add flex display */
+    align-items: center; /* Vertically center the text */
+}
+
+.admin-contact a {
+    display: inline-flex; /* Keep the link inline and flexible */
+    align-items: center; /* Center the icon vertically */
+    text-decoration: none; /* Remove underline */
+    padding: 0 5px;
+}
+
+.admin-contact img {
+    width: 30px; /* Adjusted size for natural look */
+    height: 30px; /* Adjusted size */
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+    border-radius: 20%; /* Circular shape */
+    background-color: #00bfa5; /* Light background to mimic a button */
+    padding: 5px; /* Padding for button-like appearance */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); /* Subtle shadow */
+}
+
+.admin-contact img:hover {
+    transform: scale(1.1); /* Subtle enlargement */
+    background-color: #00bfa5; /* Change color on hover */
+    box-shadow: 0 4px 15px rgba(5, 252, 215, 0.6); /* Glow effect */
+}
+
+.admin-contact img:active {
+    transform: scale(1.05); /* Slightly reduce size on click */
+    background-color: #009688; /* Darker shade for active state */
+}
+
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+form label {
+    color: #ffffff;
     font-weight: bold;
 }
 
-.close:hover,
-.close:focus {
-    color: black;
-    text-decoration: none;
+form input {
+    padding: 10px;
+    border: 1px solid #555;
+    border-radius: 5px;
+    background-color: #2a2a2a;
+    color: #fff;
+    font-size: 14px;
+}
+
+form input:focus {
+    outline: none;
+    border-color: #05fcd7;
+}
+
+form button {
+    padding: 10px;
+    background-color: #04AA6D;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
     cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+form button:hover {
+    background-color: #038e55;
+}
+
+#notification {
+    display: none;  /* Изначально скрыто */
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #121212;  /* Черный фон */
+    color: #ff0000;  /* Красный текст */
+    padding: 20px;
+    border: 2px solid #ff0000;  /* Красная рамка */
+    border-radius: 8px;
+    font-size: 1.2em;  /* Увеличенный шрифт */
+    z-index: 1000;  /* Чтобы было поверх других элементов */
+    width: 80%;  /* Ширина 80% экрана */
+    max-width: 600px;  /* Максимальная ширина */
+    flex-direction: column;  /* Вертикальное расположение элементов */
+    align-items: center;  /* Центрируем по горизонтали */
+}
+
+#notification button {
+    margin-top: 10px;  /* Отступ сверху для кнопки */
+    background-color: #ff0000;  /* Красный фон кнопки */
+    color: #ffffff;  /* Белый текст кнопки */
+    border: none;  /* Убираем рамку */
+    padding: 10px 20px;  /* Отступы для кнопки */
+    border-radius: 5px;  /* Скругление углов */
+    cursor: pointer;  /* Указатель курсора при наведении */
+}
+
+#notification button:hover {
+    background-color: #cc0000;  /* Темнее красный при наведении */
+    transform: scale(1.05);  /* Увеличение кнопки при наведении */
+}
+
+@media (max-width: 600px) {
+    .main-container {
+        padding: 15px;
+        width: 100%; /* Full width for small screens */
+    }
+
+    .admin-contact img {
+        width: 20px;
+        height: 20px;
+    }
+
+    form input {
+        font-size: 12px;
+    }
+
+    form button {
+        font-size: 14px;
+    }
 }

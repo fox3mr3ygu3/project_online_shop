@@ -10,8 +10,6 @@
     <link rel="stylesheet" href="{% static 'main/styles/no_found_p.css' %}">
     <link rel="stylesheet" href="{% static 'main/styles/products_style.css' %}">
     <link rel="stylesheet" href="{% static 'main/styles/search.css' %}">
-    <link rel="stylesheet" href="{% static 'main/styles/filter.css' %}">
-    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
 </head>
 <body>
     <header>
@@ -19,46 +17,7 @@
     </header>
     <main>
         <section>
-            <div class="filter-container">
-                <form action="{% url 'products-list' product_category=selected_category.category %}" method="GET">
-                    {% if selected_category.category|lower == "monitor" %}
-                    <div class="filter-group">
-                        <label for="fps">FPS:</label>
-                        <select name="fps" id="fps" class="filter-select">
-                            <option value="">Any</option>
-                            {% for fps in fps_options %}
-                            <option value="{{ fps }}" {% if fps|stringformat:"d" in fps_filter %}selected{% endif %}>{{ fps }} FPS</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    {% endif %}
-                    <div class="filter-group">
-                        <label for="brand">Brand:</label>
-                        <select name="brand" id="brand" class="filter-select">
-                            <option value="">Any</option>
-                            {% for brand in brands %}
-                            <option value="{{ brand.id }}" {% if brand.id|stringformat:"d" in brand_filter %}selected{% endif %}>{{ brand.brand }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <div class="filter-group">
-                        <label for="price-range">Price Range:</label>
-                        <div class="price-inputs">
-                            <div class="price-wrapper">
-                                <input type="number" name="min_price" id="min-price" value="{{ min_price }}" placeholder="Min Price" min="{{ min_price_db }}" max="{{ max_price_db }}">
-                                <span class="currency">UZS</span>
-                            </div>
-                            <span class="range-indicator">&#x2190;</span> 
-                            <span class="range-indicator">&#x2192;</span> 
-                            <div class="price-wrapper">
-                                <input type="number" name="max_price" id="max-price" value="{{ max_price }}" placeholder="Max Price" min="{{ min_price_db }}" max="{{ max_price_db }}">
-                                <span class="currency">UZS</span>
-                            </div>
-                        </div>
-                    </div>
-                    <button type="submit" class="filter-button">Apply Filters</button>
-                </form>
-            </div>
+            {% include 'main/filter.html' %}
             <div class="products-container">
                 {% if no_products_found %}
                     <p>No found products.</p>
@@ -76,10 +35,12 @@
                                 </div>
                             </div>
                         </a>
-                        <div class="product-price-wrapper">
-                            <span class="product-price">{{ product.price.amount|floatformat:2|intcomma }}</span>
-                            <span class="product-price">{{ product.price.currency }}</span>
-                        </div>
+                        <a href="{% url 'payment' product.category product.slug %}" style="text-decoration: none;">
+                            <div class="product-price-wrapper">
+                                <span class="product-price">{{ product.price.amount|floatformat:2|intcomma }}</span>
+                                <span class="product-price">{{ product.price.currency }}</span>
+                            </div>
+                        </a>
                     </article>
                 </div>
                     {% endfor %}

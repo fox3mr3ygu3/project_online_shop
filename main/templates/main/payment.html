@@ -1,10 +1,143 @@
+{% load humanize %}
+{% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'main/styles/payment.css' %}">
+    <title>Оплата</title>
+    <script>
+        let isFirstClick = true;  // Переменная для отслеживания первого нажатия
+
+        function updatePrice() {
+            const quantity = document.getElementById('quantity').value;
+            const pricePerUnit = {{ product.price.amount }};
+            const totalPrice = quantity * pricePerUnit;
+            document.getElementById('total-price').innerText = totalPrice.toFixed(2);
+        }
+
+        function validateCity() {
+            const cityInput = document.getElementById('city');
+            const cityValue = cityInput.value;
+            if (/\d/.test(cityValue)) {
+                alert('Название города не должно содержать цифры.');
+                cityInput.value = '';
+                cityInput.focus();
+                return false;
+            }
+            return true;
+        }
+
+        function validatePhone() {
+            const phoneInput = document.getElementById('phone');
+            const phoneValue = phoneInput.value;
+            if (/[a-zA-Zа-яА-ЯЁё]/.test(phoneValue)) {
+                alert('Телефон не должен содержать буквы.');
+                phoneInput.value = '';
+                phoneInput.focus();
+                return false;
+            }
+            return true;
+        }
+
+        function validatePhoneLength() {
+            const phoneInput = document.getElementById('phone');
+            const phoneValue = phoneInput.value;
+            if (phoneValue.length < 9) {
+                alert('Телефон должен содержать не менее 9 цифр.');
+                phoneInput.focus();
+                return false;
+            }
+            return true;
+        }
+
+        function validateTelegram() {
+            const telegramInput = document.getElementById('telegram');
+            const telegramValue = telegramInput.value;
+            if (/\s/.test(telegramValue)) {
+                alert('Номер Telegram не должен содержать пробелов.');
+                telegramInput.value = '';
+                telegramInput.focus();
+                return false;
+            }
+            return true;
+        }
+
+        function showNotification(message) {
+            const notification = document.getElementById('notification');
+            const messageElement = document.getElementById('notification-message');
+            messageElement.innerText = message;
+            notification.style.display = 'flex';
+        }
+
+        function closeNotification() {
+            const notification = document.getElementById('notification');
+            notification.style.display = 'none';
+        }
+
+        function validateForm() {
+            return validateCity() && validatePhone() && validatePhoneLength() && validateTelegram();
+        }
+
+        function handleSubmit(event) {
+            event.preventDefault();  // Отменяем стандартное поведение формы
+
+            if (isFirstClick) {
+                if (validateForm()) {
+                    showNotification('Проверьте все данные. Если все правильно, нажмите кнопку (Подтвердить заказ) еще раз для подтверждения.');
+                    isFirstClick = false;  // Устанавливаем флаг, что кнопка нажата
+                }
+            } else {
+                event.target.submit();  // Отправляем форму
+            }
+        }
+    </script>
 </head>
 <body>
+    <div class="main-container">
+        <h1>Оплата</h1>
+        <p>Вы покупаете: <strong>{{ product.title }}</strong></p>
+        <p>Цена за единицу: {{ product.price.amount|floatformat:2|intcomma }} {{ product.price.currency }}</p>
 
+        <div class="admin-contact">
+            <p>Контакт для связи с администратором: 
+                <a href="https://t.me/bb_814" target="_blank" rel="noopener noreferrer">
+                    <img src="https://cdn-icons-png.flaticon.com/512/2111/2111646.png" alt="Telegram">
+                </a>
+            </p>
+        </div>
+
+        <div id="notification">
+            <p id="notification-message"></p>
+            <button id="notification-close" onclick="closeNotification()">OK</button>
+        </div>  <!-- Уведомление -->
+
+        <form method="POST" onsubmit="handleSubmit(event);">
+            {% csrf_token %}
+            <label for="quantity">Количество:</label>
+            <input type="number" id="quantity" name="quantity" value="1" min="1" onchange="updatePrice()">
+            
+            <h3>Итого: <span id="total-price">{{ product.price.amount|floatformat:2|intcomma }}</span> {{ product.price.currency }}</h3>
+            
+            <h2>Данные для доставки:</h2>
+            <label for="full_name">Имя:</label>
+            <input type="text" id="full_name" name="name" required>
+
+            <label for="city">Город:</label>
+            <input type="text" id="city" name="city" required oninput="validateCity()">
+            
+            <label for="address">Адрес:</label>
+            <input type="text" id="address" name="address" required>
+            
+            <label for="phone">Телефон:</label>
+            <input type="tel" id="phone" name="phone" required oninput="validatePhone()">
+
+            <label for="telegram">Telegram:</label>
+            <input type="text" id="telegram" name="telegram" required oninput="validateTelegram()">
+            
+            <button type="submit">Подтвердить заказ</button>
+        </form>
+    </div>
 </body>
 </html>

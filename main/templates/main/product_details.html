@@ -27,9 +27,10 @@
         </article>
     </main>
     <div id="buy">
-        <a href="payment" class="buy-button">{{ product.price.amount|floatformat:2|intcomma }} {{ product.price.currency }}</a>
+        <a href="{% url 'payment' product.category product.slug %}" class="buy-button">
+            {{ product.price.amount|floatformat:2|intcomma }} {{ product.price.currency }}
+        </a>
     </div>
-
     <script>
         document.addEventListener('DOMContentLoaded', function() {
     const images = [

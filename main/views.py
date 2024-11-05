@@ -1,11 +1,12 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Product, SortedProducts, Category, Brand, VisitorCounter
+from .models import Product, SortedProducts, Category, Brand, VisitorCounter, Order
 from django.utils.text import slugify
 from django.db.models import Min, Max, F
 from django.http import JsonResponse
 from fuzzywuzzy import process
 from django.utils import timezone
 from datetime import timedelta
+from .telegram_bot import send_order_to_telegram
 
 
 
@@ -49,8 +50,51 @@ def get_visitor_count(request):
     return JsonResponse({'visitor_count': visitor_count})
 
 
-def buy(request):
-    return render(request, 'main/payment.html')
+def buy(request, product_category, product_slug):
+    selected_product = SortedProducts.objects.get(slug=product_slug, category__category=product_category)
+    
+    if request.method == 'POST':
+        quantity = int(request.POST.get('quantity', 1))
+        name = request.POST.get('name')  # Получаем Имя
+        city = request.POST.get('city')
+        address = request.POST.get('address')
+        phone = request.POST.get('phone')
+        telegram = request.POST.get('telegram')  # Получаем Telegram
+        total_price = selected_product.price.amount * quantity   # Рассчитываем общую стоимость
+
+        order = Order.objects.create(
+            quantity=quantity,
+            name=name,
+            city=city,
+            address=address,
+            phone=phone,
+            telegram=telegram,
+            total_price=total_price,
+            product_name=selected_product
+        )
+        print('12')
+        response = send_order_to_telegram(order) # Отправляем заказ на Тelegram 
+        if response.status_code == 200:
+            # Устанавливаем флаг в сессии после успешной покупки
+            request.session['purchase_successful'] = True
+            return redirect('final-page', product_category=product_category, product_slug=product_slug)  # Перенаправление на страницу успешного заказа
+        else:
+        # Обработка ошибки отправки
+            print(f"Ошибка отправки в Telegram: {response.text}")
+        # Можно перенаправить на страницу с ошибкой или показать уведомление
+    return render(request, 'main/payment.html', {
+           'product': selected_product
+        })
+
+
+def final_page(request, product_category, product_slug):
+    # Проверяем, есть ли флаг в сессии
+    if not request.session.get('purchase_successful'):
+        return redirect('/')  # Перенаправляем на главную или другую страницу, если доступа нет
+    
+    # Удаляем флаг после первого посещения
+    del request.session['purchase_successful']
+    return render(request, 'main/final.html')
 
 
 def product_details(request, product_slug, product_category):
@@ -72,42 +116,103 @@ def products_list(request, product_category):
 
     # Получаем параметры фильтрации из запроса
     query = request.GET.get('q')
-    fps_filter = request.GET.getlist('fps')  # Ожидаем список для множественного выбора
-    brand_filter = request.GET.getlist('brand')  # Ожидаем список для множественного выбора
+    fps_filter = request.GET.getlist('fps')
+    brand_filter = request.GET.getlist('brand')
     min_price = request.GET.get('min_price')
     max_price = request.GET.get('max_price')
+    resolution_filter = request.GET.getlist('resolution')
+    switch_type_filter = request.GET.getlist('switch_type')
+    dpi_filter = request.GET.getlist('dpi')
+    sensor_type_filter = request.GET.getlist('sensor_type')
+    socket_type_filter = request.GET.getlist('socket_type')
+    form_factor_filter = request.GET.getlist('form_factor')
+    ram_type_filter = request.GET.getlist('ram_type')
+    power_wattage_filter = request.GET.getlist('power_wattage')
+    storage_type_filter = request.GET.getlist('storage_type')
+    video_memory_filter = request.GET.getlist('video_memory')
+    connection_type_filter = request.GET.getlist('connection_type')
 
     # Применяем поиск по заголовку, если он предоставлен
     if query:
         sorted_products = sorted_products.filter(title__icontains=query)
 
-    # Применяем фильтр FPS, если он предоставлен и не пустой
-    if fps_filter and any(fps_filter):
-        sorted_products = sorted_products.filter(fps__in=fps_filter)
+    # Применяем фильтры в зависимости от категории
+    if selected_category.category.lower() == 'monitor':
+        if fps_filter and '' not in fps_filter:
+            sorted_products = sorted_products.filter(fps__in=fps_filter)
+        if resolution_filter and '' not in resolution_filter:
+            sorted_products = sorted_products.filter(resolution__in=resolution_filter)
+
+    if selected_category.category.lower() == 'keyboard':
+        if switch_type_filter and '' not in switch_type_filter:
+            sorted_products = sorted_products.filter(switch_type__in=switch_type_filter)
+
+    if selected_category.category.lower() == 'mouse':
+        if dpi_filter and '' not in dpi_filter:
+            sorted_products = sorted_products.filter(dpi__in=dpi_filter)
+        if sensor_type_filter and '' not in sensor_type_filter:
+            sorted_products = sorted_products.filter(sensor_type__in=sensor_type_filter)
+
+    if selected_category.category.lower() == 'motherboard':
+        if socket_type_filter and '' not in socket_type_filter:
+            sorted_products = sorted_products.filter(socket_type__in=socket_type_filter)
+        if form_factor_filter and '' not in form_factor_filter:
+            sorted_products = sorted_products.filter(form_factor__in=form_factor_filter)
+
+    if selected_category.category.lower() == 'ram':
+        if ram_type_filter and '' not in ram_type_filter:
+            sorted_products = sorted_products.filter(ram_type__in=ram_type_filter)
+
+    if selected_category.category.lower() == 'power supply':
+        if power_wattage_filter and '' not in power_wattage_filter:
+            sorted_products = sorted_products.filter(power_wattage__in=power_wattage_filter)
+
+    if selected_category.category.lower() == 'storage':
+        if storage_type_filter and '' not in storage_type_filter:
+            sorted_products = sorted_products.filter(storage_type__in=storage_type_filter)
+
+    if selected_category.category.lower() == 'graphics card':
+        if video_memory_filter and '' not in video_memory_filter:
+            sorted_products = sorted_products.filter(video_memory__in=video_memory_filter)
+
+    if selected_category.category.lower() == 'headphones':
+        if connection_type_filter and '' not in connection_type_filter:
+            sorted_products = sorted_products.filter(connection_type__in=connection_type_filter)
 
     # Применяем фильтр бренда, если он предоставлен и не пустой
-    if brand_filter and any(brand_filter):
+    if brand_filter and '' not in brand_filter:
         sorted_products = sorted_products.filter(brand__in=brand_filter)
 
     # Применяем фильтр по диапазону цен, если они предоставлены
     if min_price:
         try:
-            sorted_products = sorted_products.filter(price__gte=float(min_price))  # Используем только price
+            sorted_products = sorted_products.filter(price__gte=float(min_price))
         except ValueError:
             pass  # Игнорируем ошибки конвертации
     if max_price:
         try:
-            sorted_products = sorted_products.filter(price__lte=float(max_price))  # Используем только price
+            sorted_products = sorted_products.filter(price__lte=float(max_price))
         except ValueError:
             pass  # Игнорируем ошибки конвертации
 
-    # Получаем доступные бренды и FPS для выбранной категории
+    # Получаем доступные бренды и опции фильтров для выбранной категории
     brands = Brand.objects.filter(sortedproducts__category=selected_category).distinct()
     fps_options = sorted_products.values_list('fps', flat=True).distinct()
-    
+    resolution_options = sorted_products.values_list('resolution', flat=True).distinct()
+    switch_type_options = sorted_products.values_list('switch_type', flat=True).distinct()
+    dpi_options = sorted_products.values_list('dpi', flat=True).distinct()
+    sensor_type_options = sorted_products.values_list('sensor_type', flat=True).distinct()
+    socket_type_options = sorted_products.values_list('socket_type', flat=True).distinct()
+    form_factor_options = sorted_products.values_list('form_factor', flat=True).distinct()
+    ram_type_options = sorted_products.values_list('ram_type', flat=True).distinct()
+    power_wattage_options = sorted_products.values_list('power_wattage', flat=True).distinct()
+    storage_type_options = sorted_products.values_list('storage_type', flat=True).distinct()
+    video_memory_options = sorted_products.values_list('video_memory', flat=True).distinct()
+    connection_type_options = sorted_products.values_list('connection_type', flat=True).distinct()
+
     # Получаем минимальные и максимальные цены для выбранной категории
     price_range = SortedProducts.objects.filter(category=selected_category).aggregate(
-        Min('price'), Max('price')  # Исправлено: убираем _amount
+        Min('price'), Max('price')
     )
     min_price_db = price_range['price__min'] or 0
     max_price_db = price_range['price__max'] or 0
@@ -117,14 +222,25 @@ def products_list(request, product_category):
     return render(request, 'main/products_list.html', {
         'sorted_products': sorted_products,
         'selected_category': selected_category,
-        'search_query': query,  # Передаём запрос поиска обратно в шаблон
-        'fps_filter': fps_filter,  # Передаём выбранный фильтр FPS
-        'brand_filter': brand_filter,  # Передаём выбранный фильтр бренда
-        'min_price': min_price or min_price_db,  # Передаём фильтр минимальной цены
-        'max_price': max_price or max_price_db,  # Передаём фильтр максимальной цены
-        'brands': brands,  # Передаём доступные бренды
-        'fps_options': fps_options,  # Передаём доступные FPS
-        'no_products_found': no_products_found,  # Передаём флаг отсутствия товаров
+        'search_query': query,
+        'fps_filter': fps_filter,
+        'brand_filter': brand_filter,
+        'min_price': min_price or min_price_db,
+        'max_price': max_price or max_price_db,
+        'brands': brands,
+        'fps_options': fps_options,
+        'resolution_options': resolution_options,
+        'switch_type_options': switch_type_options,
+        'dpi_options': dpi_options,
+        'sensor_type_options': sensor_type_options,
+        'socket_type_options': socket_type_options,
+        'form_factor_options': form_factor_options,
+        'ram_type_options': ram_type_options,
+        'power_wattage_options': power_wattage_options,
+        'storage_type_options': storage_type_options,
+        'video_memory_options': video_memory_options,
+        'connection_type_options': connection_type_options,
+        'no_products_found': no_products_found,
     })
 
 def search(request):

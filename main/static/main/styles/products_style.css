@@ -71,7 +71,7 @@ body {
 }
 
 .product-price-wrapper {
-    border: 2px solid #ccc; /* Light gray border */
+    border: 2px solid #c000; /* Light gray border */
     border-radius: 5px; /* Rounded corners */
     padding: 5px; /* Inner padding */
     margin-top: auto; /* Отодвигает цену вниз */
@@ -91,4 +91,3 @@ body {
     transform: scale(1.05); /* Slightly enlarge on hover */
     cursor: pointer;
 }
-

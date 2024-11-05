@@ -1,0 +1,177 @@
+{% load static %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<link rel="stylesheet" href="{% static 'main/styles/filter.css' %}">
+<div class="main-container">
+    <div class="filter-container">
+        <form action="{% url 'products-list' product_category=selected_category.category %}" method="GET">
+            {% comment %} Фильтр для мониторов {% endcomment %}
+            {% if selected_category.category|lower == "monitor" %}
+            <div class="filter-group" id="brand-abstract">
+                <label for="fps">Частота обновления:</label>
+                <select name="fps" id="fps" class="filter-select">
+                    <option value="">Все</option>
+                    {% for fps in fps_options %}
+                    <option value="{{ fps }}" {% if fps|stringformat:"d" in fps_filter %}selected{% endif %}>{{ fps }} FPS</option>
+                    {% endfor %}
+                </select>
+            </div>
+            {% endif %}
+
+            {% comment %} Фильтр для клавиатур {% endcomment %}
+            {% if selected_category.category|lower == "keyboard" %}
+            <div class="filter-group" id="brand-abstract">
+                <label for="switch_type">Тип переключателей:</label>
+                <select name="switch_type" id="switch_type" class="filter-select">
+                    <option value="">Все</option>
+                    {% for switch in switch_type_options %}
+                    <option value="{{ switch }}" {% if switch in switch_type_filter %}selected{% endif %}>{{ switch }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            {% endif %}
+
+            {% comment %} Фильтр для мышек {% endcomment %}
+            {% if selected_category.category|lower == "mouse" %}
+            <div class="filter-group" id="brand-abstract">
+                <label for="dpi">DPI:</label>
+                <select name="dpi" id="dpi" class="filter-select">
+                    <option value="">Все</option>
+                    {% for dpi in dpi_options %}
+                    <option value="{{ dpi }}" {% if dpi|stringformat:"d" in dpi_filter %}selected{% endif %}>{{ dpi }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="filter-group" id="brand-abstract">
+                <label for="sensor_type">Тип сенсора:</label>
+                <select name="sensor_type" id="sensor_type" class="filter-select">
+                    <option value="">Все</option>
+                    {% for sensor in sensor_type_options %}
+                    <option value="{{ sensor }}" {% if sensor in sensor_type_filter %}selected{% endif %}>{{ sensor }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            {% endif %}
+
+            {% comment %} Фильтр для материнских плат {% endcomment %}
+            {% if selected_category.category|lower == "motherboard" %}
+            <div class="filter-group" id="brand-abstract">
+                <label for="socket_type">Сокет:</label>
+                <select name="socket_type" id="socket_type" class="filter-select">
+                    <option value="">Все</option>
+                    {% for socket in socket_type_options %}
+                    <option value="{{ socket }}" {% if socket in socket_type_filter %}selected{% endif %}>{{ socket }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="filter-group" id="brand-abstract">
+                <label for="form_factor">Форм-фактор:</label>
+                <select name="form_factor" id="form_factor" class="filter-select">
+                    <option value="">Все</option>
+                    {% for form in form_factor_options %}
+                    <option value="{{ form }}" {% if form in form_factor_filter %}selected{% endif %}>{{ form }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            {% endif %}
+
+            {% comment %} Фильтр для оперативной памяти {% endcomment %}
+            {% if selected_category.category|lower == "ram" %}
+            <div class="filter-group" id="brand-abstract">
+                <label for="ram_type">Тип памяти:</label>
+                <select name="ram_type" id="ram_type" class="filter-select">
+                    <option value="">Все</option>
+                    {% for ram_type in ram_type_options %}
+                    <option value="{{ ram_type }}" {% if ram_type in ram_type_filter %}selected{% endif %}>{{ ram_type }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            {% endif %}
+
+            {% comment %} Фильтр для блоков питания {% endcomment %}
+            {% if selected_category.category|lower == "power-supply" %}
+            <div class="filter-group" id="brand-abstract">
+                <label for="power_wattage">Мощность (Вт):</label>
+                <select name="power_wattage" id="power_wattage" class="filter-select">
+                    <option value="">Все</option>
+                    {% for wattage in power_wattage_options %}
+                    <option value="{{ wattage }}" {% if wattage|stringformat:"d" in power_wattage_filter %}selected{% endif %}>{{ wattage }} Вт</option>
+                    {% endfor %}
+                </select>
+            </div>
+            {% endif %}
+
+            {% comment %} Фильтр для накопителей {% endcomment %}
+            {% if selected_category.category|lower == "storage" %}
+            <div class="filter-group" id="brand-abstract">
+                <label for="storage_type">Тип накопителя:</label>
+                <select name="storage_type" id="storage_type" class="filter-select">
+                    <option value="">Все</option>
+                    {% for storage in storage_type_options %}
+                    <option value="{{ storage }}" {% if storage in storage_type_filter %}selected{% endif %}>{{ storage }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            {% endif %}
+
+            {% comment %} Фильтр для видеокарт {% endcomment %}
+            {% if selected_category.category|lower == "graphics card" %}
+            <div class="filter-group" id="brand-abstract">
+                <label for="video_memory">Объем видеопамяти (ГБ):</label>
+                <select name="video_memory" id="video_memory" class="filter-select">
+                    <option value="">Все</option>
+                    {% for memory in video_memory_options %}
+                    <option value="{{ memory }}" {% if memory|stringformat:"d" in video_memory_filter %}selected{% endif %}>{{ memory }} ГБ</option>
+                    {% endfor %}
+                </select>
+            </div>
+            {% endif %}
+
+            {% comment %} Фильтр для наушников {% endcomment %}
+            {% if selected_category.category|lower == "headphones" %}
+            <div class="filter-group" id="brand-abstract">
+                <label for="connection_type">Тип подключения:</label>
+                <select name="connection_type" id="connection_type" class="filter-select">
+                    <option value="">Все</option>
+                    {% for connection in connection_type_options %}
+                    <option value="{{ connection }}" {% if connection in connection_type_filter %}selected{% endif %}>{{ connection }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            {% endif %}
+
+            {% comment %} Общий фильтр по бренду {% endcomment %}
+            <div class="filter-group" id="filter-brand">
+                <label for="brand">Бренд:</label>
+                <select name="brand" id="brand" class="filter-select">
+                    <option value="">Все</option>
+                    {% for brand in brands %}
+                    <option value="{{ brand.id }}" {% if brand.id|stringformat:"d" in brand_filter %}selected{% endif %}>{{ brand.brand }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            {% comment %} Фильтр по диапазону цен {% endcomment %}
+            <div class="filter-group">
+                <label for="price-range">Диапазон цен:</label>
+                <div class="price-inputs">
+                    <div class="price-wrapper">
+                        <input type="number" name="min_price" id="min-price" value="{{ min_price }}" placeholder="Мин. цена" min="{{ min_price_db }}" max="{{ max_price_db }}">
+                        <span class="currency">UZS</span>
+                    </div>
+                    <span class="range-indicator">&#x2190;</span> 
+                    <span class="range-indicator">&#x2192;</span> 
+                    <div class="price-wrapper">
+                        <input type="number" name="max_price" id="max-price" value="{{ max_price }}" placeholder="Макс. цена" min="{{ min_price_db }}" max="{{ max_price_db }}">
+                        <span class="currency">UZS</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="filter-button-container">
+                <button type="submit" class="filter-button">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

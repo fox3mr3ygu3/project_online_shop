@@ -1,93 +1,95 @@
 .filter-container {
-    position: sticky; /* Делает элемент "прилипшим" */
-    top: 0; /* Располагает его у верхней границы окна */
+    position: sticky;
+    top: 0;
+    margin: 0 auto;
+    max-width: 900px;
     color: white;
-    padding: 20px; /* Увеличенные отступы для лучшего пространства */
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    padding: 20px;
     margin-bottom: 20px;
-    background-color: #121212; /* Фон остается черным */
-    z-index: 1000; /* Увеличьте значение, если нужно, чтобы элемент был поверх других */
+    background-color: #1e1e1e;
+    border-radius: 10px;
+    z-index: 1000;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    gap: 10px; /* Отступы между элементами */
 }
 
-.filter-group {
-    margin-bottom: 15px;
-}
-
-.filter-group label {
-    display: block;
-    font-weight: bold;
-    margin-bottom: 5px;
-}
-
-.filter-group + .filter-group {
-    margin: 0 20px; /* Ensures space specifically between the FPS and brand filter */
-}
-
-.filter-select, .price-inputs input {
-    width: 100%;
-    padding: 10px; /* Increased padding for better usability */
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 14px;
-    margin: 0 10px;
-    box-sizing: border-box; /* Ensures padding doesn't affect width */
-    cursor: pointer;
+.filter-container .filter-group#filter-brand,
+.filter-container .filter-group#brand-abstract {
+    flex: 1 1 20%; /* Бренд и абстрактные свойства занимают по 20% контейнера */
+    min-width: 150px; /* Минимальная ширина для корректного отображения */
 }
 
 .price-inputs {
+    flex: 1 1 50%; /* Поля для ввода цен занимают оставшиеся 50% контейнера */
     display: flex;
     align-items: center;
-    justify-content: space-between; /* Space between inputs */
-
+    gap: 5px; /* Отступ между элементами */
+    width: 100%; /* Полная ширина контейнера */
 }
 
-.price-wrapper {
+.filter-button-container {
+    flex: 1 1 10%; /* Кнопка "Найти" занимает 10% контейнера */
     display: flex;
+    justify-content: center;
     align-items: center;
-    margin: 0 20px;
-    width: (50% + 100px); /* Adjust width to fit in flex layout */
 }
 
-.range-indicator {
-    font-size: 24px; /* Adjust font size for better visibility */
+.filter-select, .price-inputs input {
+    width: 100%; /* Полная ширина для всех элементов */
+    height: 36px; /* Стандартная высота */
+    padding: 6px;
+    border: 1px solid #444;
+    border-radius: 5px;
+    background-color: #2b2b2b;
     color: white;
-    margin: 0 10px; /* Spacing around arrows */
-    line-height: 1; /* Center vertically in flex layout */
+    font-size: 14px;
+    box-sizing: border-box;
+    margin-top: 5px;
 }
 
 .filter-button {
-    display: inline-block; /* Make it an inline block element */
-    padding: 10px 15px; /* Increase padding for better spacing */
+    width: 100%; /* Полная ширина кнопки */
+    height: 36px; /* Стандартная высота */
+    padding: 0;
     border: none;
     background-color: #04AA6D;
     color: white;
     font-weight: bold;
-    cursor: pointer;
-    margin: 0 10px;
-    text-decoration: none;
     border-radius: 5px;
-    transition: background-color 0.3s;
-    width: 30%; /* Adjust as needed */
+    transition: background-color 0.3s, transform 0.2s;
     text-align: center;
-    font-size: 1.2em; /* Set a proportional font size */
-    line-height: 2.7; /* Use line-height for better vertical alignment */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    font-size: 14px;
 }
 
 .filter-button:hover {
     background-color: #038e55;
+    transform: translateY(-2px);
 }
 
 .currency {
-    margin-left: 5px; /* Space between input and currency */
-    font-weight: bold; /* Emphasize currency */
+    margin-left: 5px;
+    font-weight: bold;
+    color: #cfcfcf; /* Цвет для лучшего контраста */
 }
 
-/* Responsive adjustments */
-@media (max-width: 600px) {
+@media (max-width: 768px) {
+    .filter-container {
+        flex-direction: column;
+        align-items: center;
+        gap: 10px; /* Уменьшенные отступы между элементами */
+    }
+    .filter-group, .price-inputs, .filter-button-container {
+        width: 100%; /* Полная ширина для элементов на маленьких экранах */
+    }
     .price-inputs {
-        flex-direction: column; /* Stack inputs on small screens */
+        flex-direction: column;
     }
     .price-wrapper {
-        width: 100%; /* Full width for small screens */
-        margin-bottom: 10px; /* Space between stacked elements */
+        width: 100%;
+        margin-bottom: 10px;
     }
 }
