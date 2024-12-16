@@ -87,6 +87,18 @@
             </div>
             {% endif %}
 
+            {% if selected_category.category|lower == "cooling" %}
+            <div class="filter-group" id="brand-abstract">
+                <label for="cooling_type">Тип охлождения:</label>
+                <select name="cooling_type" id="cooling_type" class="filter-select">
+                    <option value="">Все</option>
+                    {% for cooling_type in cooling_type_options %}
+                    <option value="{{ cooling_type }}" {% if cooling_type in cooling_type_filter %}selected{% endif %}>{{ cooling_type }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            {% endif %}
+
             {% comment %} Фильтр для блоков питания {% endcomment %}
             {% if selected_category.category|lower == "power-supply" %}
             <div class="filter-group" id="brand-abstract">

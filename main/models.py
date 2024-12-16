@@ -50,9 +50,8 @@ class SortedProducts(models.Model):
     title = models.CharField(max_length=200)
     brand = models.ForeignKey(Brand, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    fps = models.PositiveIntegerField(null=True, blank=True)  # Optional fps field
     # Абстрактные поля для категорий
-    resolution = models.CharField(max_length=50, null=True, blank=True)  # Разрешение (Монитор)
+    fps = models.PositiveIntegerField(null=True, blank=True)  # Optional fps field
     switch_type = models.CharField(max_length=50, null=True, blank=True)  # Тип переключателей (Клавиатура)
     backlight = models.BooleanField(null=True, blank=True)  # Подсветка (Клавиатура, коврик для мыши)
     dpi = models.PositiveIntegerField(null=True, blank=True)  # DPI (Мышь)
@@ -68,7 +67,6 @@ class SortedProducts(models.Model):
     cooling_type = models.CharField(max_length=50, null=True, blank=True)  # Тип охлаждения (Охлаждение)
     video_memory = models.PositiveIntegerField(null=True, blank=True)  # Память (Видеокарта)
     connection_type = models.CharField(max_length=50, null=True, blank=True)  # Подключение (Наушники)
-    noise_cancellation = models.BooleanField(null=True, blank=True)  # Шумоподавление (Наушники)
     mouse_pad_size = models.CharField(max_length=50, null=True, blank=True)  # Размер (Коврик для мыши)
 
     slug = models.SlugField(unique=True)
@@ -81,8 +79,6 @@ class SortedProducts(models.Model):
         if self.category.category.lower() == 'monitor':
             if not self.fps:
                 raise ValidationError('Поле FPS обязательно для категории "monitor".')
-            if not self.resolution:
-                raise ValidationError('Поле разрешения обязательно для категории "monitor".')
 
         # Проверка обязательных полей для категории 'keyboard'
         if self.category.category.lower() == 'keyboard':
@@ -142,8 +138,7 @@ class SortedProducts(models.Model):
         if self.category.category.lower() == 'headphones':
             if not self.connection_type:
                 raise ValidationError('Поле подключения обязательно для категории "headphones".')
-            if self.noise_cancellation is None:
-                raise ValidationError('Поле шумоподавления обязательно для категории "headphones".')
+           
 
         # Проверка обязательных полей для категории 'mouse pad'
         if self.category.category.lower() == 'mouse pad':

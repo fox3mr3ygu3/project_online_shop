@@ -1,32 +1,74 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     var categoryField = document.getElementById('id_category');
-    var fpsField = document.querySelector('.form-row.field-fps');
-    var fpsInput = document.getElementById('id_fps');
     var form = document.querySelector('form');
 
-    function toggleFPSField() {
+    // Сопоставление категорий с обязательными полями
+    var categoryFields = {
+        'monitor': ['fps'],
+        'keyboard': ['switch_type', 'backlight'],
+        'mouse': ['dpi', 'sensor_type'],
+        'motherboard': ['socket_type', 'form_factor'],
+        'ram': ['ram_type', 'ram_size'],
+        'power-supply': ['power_wattage', 'certification'],
+        'storage': ['storage_type', 'storage_size'],
+        'cooling': ['cooling_type'],
+        'graphics card': ['video_memory', 'ram_type'],
+        'headphones': ['connection_type'],
+        'mouse pad': ['mouse_pad_size'],
+        'case': ['form_factor']
+    };
+
+    // Функция для показа/скрытия полей в зависимости от категории
+    function toggleFields() {
         var selectedCategory = categoryField.options[categoryField.selectedIndex].text.toLowerCase();
-        if (selectedCategory === 'monitor') {
-            fpsField.style.display = 'block';  // Показываем поле FPS
-            fpsInput.required = true;  // Делаем поле обязательным
-        } else {
-            fpsField.style.display = 'none';  // Скрываем поле FPS
-            fpsInput.required = false;  // Снимаем обязательность
+
+        // Сначала скрываем все поля
+        for (var fields of Object.values(categoryFields)) {
+            fields.forEach(function (field) {
+                var fieldRow = document.querySelector('.form-row.field-' + field);
+                var fieldInput = document.getElementById('id_' + field);
+                if (fieldRow) {
+                    fieldRow.style.display = 'none';
+                    fieldInput.required = false;  // Поля не обязательные по умолчанию
+                }
+            });
+        }
+
+        // Показываем и делаем обязательными только поля, соответствующие выбранной категории
+        if (categoryFields[selectedCategory]) {
+            categoryFields[selectedCategory].forEach(function (field) {
+                var fieldRow = document.querySelector('.form-row.field-' + field);
+                var fieldInput = document.getElementById('id_' + field);
+                if (fieldRow) {
+                    fieldRow.style.display = 'block';
+                    fieldInput.required = true;  // Делаем поле обязательным
+                }
+            });
         }
     }
 
-    // Проверяем перед отправкой формы
-    form.addEventListener('submit', function(event) {
+    // Проверка обязательных полей перед отправкой формы
+    form.addEventListener('submit', function (event) {
         var selectedCategory = categoryField.options[categoryField.selectedIndex].text.toLowerCase();
-        if (selectedCategory === 'monitor' && !fpsInput.value) {
-            event.preventDefault();  // Останавливаем отправку формы
-            alert('Поле FPS обязательно для категории "monitor".');  // Показываем уведомление
+
+        if (categoryFields[selectedCategory]) {
+            var isValid = true;
+            categoryFields[selectedCategory].forEach(function (field) {
+                var fieldInput = document.getElementById('id_' + field);
+                if (fieldInput && fieldInput.required && !fieldInput.value) {
+                    isValid = false;
+                }
+            });
+            if (!isValid) {
+                event.preventDefault();  // Останавливаем отправку формы
+                alert('Пожалуйста, заполните все обязательные поля для категории "' + selectedCategory + '".');
+            }
         }
     });
 
-    // Изначально скрываем или показываем поле в зависимости от выбранной категории
-    toggleFPSField();
+    // Изначально скрываем или показываем поля в зависимости от выбранной категории
+    toggleFields();
 
     // Добавляем обработчик события на изменение категории
-    categoryField.addEventListener('change', toggleFPSField);
+    categoryField.addEventListener('change', toggleFields);
 });

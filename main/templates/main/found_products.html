@@ -1,0 +1,47 @@
+{% load humanize %}
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PC Store</title>
+    <link rel="stylesheet" href="{% static 'main/styles/style.css' %}">
+    <link rel="stylesheet" href="{% static 'main/styles/base.css' %}">
+    <link rel="stylesheet" href="{% static 'main/styles/products_style.css' %}">
+    <link rel="stylesheet" href="{% static 'main/styles/filter.css' %}">
+    <link rel="stylesheet" href="{% static 'main/styles/search.css' %}">
+</head>
+<body>
+    <header>
+        {% include 'main/search_form.html' %}
+    </header>
+    <main>
+        <section>
+            <div class="products-container">
+                {% for product in sorted_products %}
+                    <div class="products">
+                        <article>
+                            <a href="{% url 'product-detail' product.category product.slug %}" class="btn">
+                                <div class="product-summary">
+                                    <div class="product-image">
+                                        <img src="{{ product.image.all.0.image.url }}" alt="{{ product.title }}">
+                                    </div>
+                                    <div class="product-title">
+                                        <h3>{{ product.title }}</h3>
+                                    </div>
+                                </div>
+                            </a>
+                            <div class="product-price-wrapper">
+                                <span class="product-price">{{ product.price.amount|floatformat:2|intcomma }}</span>
+                                <span class="product-price">{{ product.price.currency }}</span>
+                            </div>
+                        </article>
+                    </div>
+                {% endfor %}
+            </div>
+        </section>
+    </main>
+</body>
+</html>

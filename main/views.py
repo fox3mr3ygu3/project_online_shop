@@ -110,6 +110,10 @@ def product_details(request, product_slug, product_category):
 
 
 # Includes Category model
+from django.shortcuts import render, get_object_or_404
+from django.db.models import Min, Max
+from .models import SortedProducts, Category, Brand
+
 def products_list(request, product_category):
     selected_category = get_object_or_404(Category, category=product_category)
     sorted_products = SortedProducts.objects.filter(category=selected_category).order_by('-price')
@@ -120,17 +124,22 @@ def products_list(request, product_category):
     brand_filter = request.GET.getlist('brand')
     min_price = request.GET.get('min_price')
     max_price = request.GET.get('max_price')
-    resolution_filter = request.GET.getlist('resolution')
     switch_type_filter = request.GET.getlist('switch_type')
+    backlight_filter = request.GET.getlist('backlight')
     dpi_filter = request.GET.getlist('dpi')
     sensor_type_filter = request.GET.getlist('sensor_type')
     socket_type_filter = request.GET.getlist('socket_type')
     form_factor_filter = request.GET.getlist('form_factor')
     ram_type_filter = request.GET.getlist('ram_type')
+    ram_size_filter = request.GET.getlist('ram_size')
     power_wattage_filter = request.GET.getlist('power_wattage')
+    certification_filter = request.GET.getlist('certification')
     storage_type_filter = request.GET.getlist('storage_type')
+    storage_size_filter = request.GET.getlist('storage_size')
+    cooling_type_filter = request.GET.getlist('cooling_type')
     video_memory_filter = request.GET.getlist('video_memory')
     connection_type_filter = request.GET.getlist('connection_type')
+    mouse_pad_size_filter = request.GET.getlist('mouse_pad_size')
 
     # Применяем поиск по заголовку, если он предоставлен
     if query:
@@ -140,12 +149,16 @@ def products_list(request, product_category):
     if selected_category.category.lower() == 'monitor':
         if fps_filter and '' not in fps_filter:
             sorted_products = sorted_products.filter(fps__in=fps_filter)
-        if resolution_filter and '' not in resolution_filter:
-            sorted_products = sorted_products.filter(resolution__in=resolution_filter)
 
     if selected_category.category.lower() == 'keyboard':
         if switch_type_filter and '' not in switch_type_filter:
             sorted_products = sorted_products.filter(switch_type__in=switch_type_filter)
+        if backlight_filter and '' not in backlight_filter:
+            sorted_products = sorted_products.filter(backlight__in=backlight_filter)
+        
+    if selected_category.category.lower() == 'cooling':
+        if cooling_type_filter and '' not in cooling_type_filter:
+            sorted_products = sorted_products.filter(cooling_type__in=cooling_type_filter)
 
     if selected_category.category.lower() == 'mouse':
         if dpi_filter and '' not in dpi_filter:
@@ -162,22 +175,36 @@ def products_list(request, product_category):
     if selected_category.category.lower() == 'ram':
         if ram_type_filter and '' not in ram_type_filter:
             sorted_products = sorted_products.filter(ram_type__in=ram_type_filter)
+        if ram_size_filter and '' not in ram_size_filter:
+            sorted_products = sorted_products.filter(ram_size__in=ram_size_filter)
 
-    if selected_category.category.lower() == 'power supply':
+    if selected_category.category.lower() == 'power-supply':
         if power_wattage_filter and '' not in power_wattage_filter:
             sorted_products = sorted_products.filter(power_wattage__in=power_wattage_filter)
+        if certification_filter and '' not in certification_filter:
+            sorted_products = sorted_products.filter(certification__in=certification_filter)
 
     if selected_category.category.lower() == 'storage':
         if storage_type_filter and '' not in storage_type_filter:
             sorted_products = sorted_products.filter(storage_type__in=storage_type_filter)
+        if storage_size_filter and '' not in storage_size_filter:
+            sorted_products = sorted_products.filter(storage_size__in=storage_size_filter)
 
-    if selected_category.category.lower() == 'graphics card':
+    if selected_category.category.lower() == 'graphics-card':
         if video_memory_filter and '' not in video_memory_filter:
             sorted_products = sorted_products.filter(video_memory__in=video_memory_filter)
 
     if selected_category.category.lower() == 'headphones':
         if connection_type_filter and '' not in connection_type_filter:
             sorted_products = sorted_products.filter(connection_type__in=connection_type_filter)
+
+    if selected_category.category.lower() == 'mouse-pad':
+        if mouse_pad_size_filter and '' not in mouse_pad_size_filter:
+            sorted_products = sorted_products.filter(mouse_pad_size__in=mouse_pad_size_filter)
+
+    if selected_category.category.lower() == 'case':
+        if form_factor_filter and '' not in form_factor_filter:
+            sorted_products = sorted_products.filter(form_factor__in=form_factor_filter)
 
     # Применяем фильтр бренда, если он предоставлен и не пустой
     if brand_filter and '' not in brand_filter:
@@ -197,18 +224,23 @@ def products_list(request, product_category):
 
     # Получаем доступные бренды и опции фильтров для выбранной категории
     brands = Brand.objects.filter(sortedproducts__category=selected_category).distinct()
-    fps_options = sorted_products.values_list('fps', flat=True).distinct()
-    resolution_options = sorted_products.values_list('resolution', flat=True).distinct()
-    switch_type_options = sorted_products.values_list('switch_type', flat=True).distinct()
-    dpi_options = sorted_products.values_list('dpi', flat=True).distinct()
-    sensor_type_options = sorted_products.values_list('sensor_type', flat=True).distinct()
-    socket_type_options = sorted_products.values_list('socket_type', flat=True).distinct()
-    form_factor_options = sorted_products.values_list('form_factor', flat=True).distinct()
-    ram_type_options = sorted_products.values_list('ram_type', flat=True).distinct()
-    power_wattage_options = sorted_products.values_list('power_wattage', flat=True).distinct()
-    storage_type_options = sorted_products.values_list('storage_type', flat=True).distinct()
-    video_memory_options = sorted_products.values_list('video_memory', flat=True).distinct()
-    connection_type_options = sorted_products.values_list('connection_type', flat=True).distinct()
+    fps_options = sorted(filter(None, set(sorted_products.values_list('fps', flat=True))))
+    switch_type_options = sorted(filter(None, set(sorted_products.values_list('switch_type', flat=True))))
+    backlight_options = sorted(filter(None, set(sorted_products.values_list('backlight', flat=True))))
+    dpi_options = sorted(filter(None, set(sorted_products.values_list('dpi', flat=True))))
+    sensor_type_options = sorted(filter(None, set(sorted_products.values_list('sensor_type', flat=True))))
+    socket_type_options = sorted(filter(None, set(sorted_products.values_list('socket_type', flat=True))))
+    form_factor_options = sorted(filter(None, set(sorted_products.values_list('form_factor', flat=True))))
+    ram_type_options = sorted(filter(None, set(sorted_products.values_list('ram_type', flat=True))))
+    ram_size_options = sorted(filter(None, set(sorted_products.values_list('ram_size', flat=True))))
+    power_wattage_options = sorted(filter(None, set(sorted_products.values_list('power_wattage', flat=True))))
+    certification_options = sorted(filter(None, set(sorted_products.values_list('certification', flat=True))))
+    storage_type_options = sorted(filter(None, set(sorted_products.values_list('storage_type', flat=True))))
+    storage_size_options = sorted(filter(None, set(sorted_products.values_list('storage_size', flat=True))))
+    cooling_type_options = sorted(filter(None, set(sorted_products.values_list('cooling_type', flat=True))))
+    video_memory_options = sorted(filter(None, set(sorted_products.values_list('video_memory', flat=True))))
+    connection_type_options = sorted(filter(None, set(sorted_products.values_list('connection_type', flat=True))))
+    mouse_pad_size_options = sorted(filter(None, set(sorted_products.values_list('mouse_pad_size', flat=True))))
 
     # Получаем минимальные и максимальные цены для выбранной категории
     price_range = SortedProducts.objects.filter(category=selected_category).aggregate(
@@ -229,17 +261,22 @@ def products_list(request, product_category):
         'max_price': max_price or max_price_db,
         'brands': brands,
         'fps_options': fps_options,
-        'resolution_options': resolution_options,
         'switch_type_options': switch_type_options,
+        'backlight_options': backlight_options,
         'dpi_options': dpi_options,
         'sensor_type_options': sensor_type_options,
         'socket_type_options': socket_type_options,
         'form_factor_options': form_factor_options,
         'ram_type_options': ram_type_options,
+        'ram_size_options': ram_size_options,
         'power_wattage_options': power_wattage_options,
+        'certification_options': certification_options,
         'storage_type_options': storage_type_options,
+        'storage_size_options': storage_size_options,
+        'cooling_type_options': cooling_type_options,
         'video_memory_options': video_memory_options,
         'connection_type_options': connection_type_options,
+        'mouse_pad_size_options': mouse_pad_size_options,
         'no_products_found': no_products_found,
     })
 
@@ -285,6 +322,7 @@ def search(request):
                     'error': 'No products found matching your search.'
                 })
     else:
+        # Handle the case where no query is provided
         return render(request, 'main/no_found.html', {
             'sorted_products': [],
             'error': 'No search query provided.'
